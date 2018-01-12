@@ -74,6 +74,8 @@ public class BulkIndexingClient implements BulkClient<IndexableRecord, Bulk> {
         } else if ("mapper_parse_exception".equals(errorType)) {
           retriable = false;
           errors.add(item.error);
+        } else if ("delete_failed_engine_exception".equals(errorType)) {
+          continue; // swallow failed delete operations, assumed to be delete on non-existent ID
         } else {
           errors.add(item.error);
         }
