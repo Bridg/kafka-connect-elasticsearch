@@ -79,7 +79,7 @@ public class ElasticsearchSinkTask extends SinkTask {
       } else {
         List<String> address = config.getList(ElasticsearchSinkConnectorConfig.CONNECTION_URL_CONFIG);
         JestClientFactory factory = new JestClientFactory();
-        factory.setHttpClientConfig(new HttpClientConfig.Builder(address).multiThreaded(true).build());
+        factory.setHttpClientConfig(new HttpClientConfig.Builder(address).readTimeout(30000).multiThreaded(true).build());
         this.client = factory.getObject();
       }
 
