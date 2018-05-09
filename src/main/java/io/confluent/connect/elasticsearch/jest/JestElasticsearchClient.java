@@ -304,7 +304,12 @@ public class JestElasticsearchClient implements ElasticsearchClient {
           errors.add(item.error);
         } else if ("delete_failed_engine_exception".equals(errorType)) {
           // swallow failed delete operations, assumed to be delete on non-existent ID
-          LOG.info("Swallowing error type {} for document ID {} and index {}", errorType, item.id, item.index);
+          LOG.info(
+              "Swallowing error type {} for document ID {} and index {}",
+                  errorType,
+                  item.id,
+                  item.index
+          );
           continue;
         } else {
           errors.add(item.error);
