@@ -89,7 +89,8 @@ public class JestElasticsearchClient implements ElasticsearchClient {
     try {
       JestClientFactory factory = new JestClientFactory();
       factory.setHttpClientConfig(new HttpClientConfig.Builder(address)
-          .readTimeout(60000) // explicitly setting timeout of 60s
+          .readTimeout(60000) // explicitly setting read timeout of 60s
+          .maxConnectionIdleTime(30000) // explicitly setting idle ttl of 30s
           .multiThreaded(true)
           .build()
       );
