@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class JestElasticsearchClient implements ElasticsearchClient {
 
@@ -90,7 +91,7 @@ public class JestElasticsearchClient implements ElasticsearchClient {
       JestClientFactory factory = new JestClientFactory();
       factory.setHttpClientConfig(new HttpClientConfig.Builder(address)
           .readTimeout(60000) // explicitly setting read timeout of 60s
-          .maxConnectionIdleTime(30000) // explicitly setting idle ttl of 30s
+          .maxConnectionIdleTime(30000, TimeUnit.MILLISECONDS) // explicitly setting idle ttl of 30s
           .multiThreaded(true)
           .build()
       );
