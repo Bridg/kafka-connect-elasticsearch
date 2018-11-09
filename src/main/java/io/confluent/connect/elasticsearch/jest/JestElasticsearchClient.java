@@ -283,6 +283,12 @@ public class JestElasticsearchClient implements ElasticsearchClient {
     return req.build();
   }
 
+  private Boolean swallowableErrorType(final String errorType) {
+    return "mapper_parse_exception".equals(errorType)
+        || "mapper_parsing_exception".equals(errorType)
+        || "delete_failed_engine_exception".equals(errorType);
+  }
+
   public BulkResponse executeBulk(BulkRequest bulk) throws IOException {
     final BulkResult result = client.execute(((JestBulkRequest) bulk).getBulk());
 
@@ -301,11 +307,8 @@ public class JestElasticsearchClient implements ElasticsearchClient {
         final String errorType = parsedError.get("type").asText("");
         if ("version_conflict_engine_exception".equals(errorType)) {
           versionConflicts.add(new Key(item.index, item.type, item.id));
-        } else if ("mapper_parse_exception".equals(errorType)) {
-          retriable = false;
-          errors.add(item.error);
-        } else if ("delete_failed_engine_exception".equals(errorType)) {
-          // swallow failed delete operations, assumed to be delete on non-existent ID
+        } else if (swallowableErrorType(errorType)) {
+          // swallow failed delete and parse operations
           LOG.info(
               "Swallowing error type {} for document ID {} and index {}",
                   errorType,
